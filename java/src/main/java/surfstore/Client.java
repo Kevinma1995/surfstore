@@ -1,8 +1,11 @@
 package surfstore;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+
+import com.google.protobuf.ByteString;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -40,7 +43,21 @@ public final class Client {
         metadataChannel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
         blockChannel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
-    
+
+    private static Block stringToBlock(String s) {
+        Builder builder = Block.newBuilder();
+
+        try {
+            builder.setData(ByteString.copyFrom(s, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+
+        builder.setHash(HashUtils.sha256(s));
+
+        return builder.build();
+    }
+
 	private void go() {
 		metadataStub.ping(Empty.newBuilder().build());
         logger.info("Successfully pinged the Metadata server");

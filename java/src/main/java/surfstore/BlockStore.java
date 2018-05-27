@@ -2,6 +2,8 @@ package surfstore;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
@@ -86,6 +88,14 @@ public final class BlockStore {
     }
 
     static class BlockStoreImpl extends BlockStoreGrpc.BlockStoreImplBase {
+
+        protected Map<String, byte[]> blockMap;
+
+        public BlockStoreImpl() {
+            super();
+            this.blockMap = new HashMap<String, byte[]>();
+        }
+
         @Override
         public void ping(Empty req, final StreamObserver<Empty> responseObserver) {
             Empty response = Empty.newBuilder().build();
@@ -94,5 +104,7 @@ public final class BlockStore {
         }
 
         // TODO: Implement the other RPCs!
+        
+
     }
 }
