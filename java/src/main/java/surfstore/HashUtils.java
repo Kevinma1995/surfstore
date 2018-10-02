@@ -21,4 +21,21 @@ public final class HashUtils {
 
         return encoded;
     }
+
+    public static String sha256(byte[] block) {
+        MessageDigest digest = null;
+
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+
+        byte[] hash = digest.digest(block);
+        String encoded = Base64.getEncoder().encodeToString(hash);
+
+        return encoded;
+    }
+
+
 }
